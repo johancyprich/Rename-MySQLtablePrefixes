@@ -45,11 +45,6 @@ param
 [void][system.reflection.Assembly]::LoadFrom("C:\Program Files (x86)\MySQL\MySQL Connector Net 6.9.3\Assemblies\v4.5\MySQL.Data.dll")
 #void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
 
-# Change this to your script libraries root folder.
-[string] $libraries = "D:\Projects\Libraries\MyLib\PowerShell"
-
-."$libraries\AppInfo\AppInfo.ps1"
-
 
 #=[ GLOBALS ]=======================================================================================
 
@@ -88,6 +83,57 @@ function RenameTable
   $mycommand2.CommandText = $sql
   $myreader2 = $mycommand2.ExecuteReader()
 }
+
+
+####################################################################################################
+### SUMMARY:
+### Writes the name of the app, copyright, license, and branding.
+###
+### PARAMTERS:
+### $appName (in) - Name of the app.
+### $copyright (in) -  Year and copyright name.
+### $appFore (in) - Foreground colour of $appName (default White).
+### $appBack (in) - Background colour of $appName (default DarkBlue).
+### $copyFore (in) - Foreground colour of $copyright (default Black).
+### $copyBlack (in) - Background colour of $copyright (default DarkGray).
+####################################################################################################
+
+function WriteProgramInfo
+{
+  param
+  (
+    [string] $appName, 
+    [string] $copyright,
+    [string] $appFore = "White",
+    [string] $appBack = "DarkBlue",
+    [string] $copyFore = "Black",
+    [string] $copyBack = "DarkGray"    
+  )
+  
+  [string] $copyrt = " Copyright (C) $copyright. All rights reserved. "
+  [string] $license = " Licensed under The MIT License (MIT)."
+  [int] $copyrtLength = $copyrt.length
+  [string] $linePadding
+  [string] $emptyLine = " " * $copyrtLength  
+  
+  # Write app info and pad with spaces based on the length of the copyright line.
+  
+  Write-Host ""
+  Write-Host $emptyLine -ForegroundColor $appFore -BackgroundColor $appBack
+  
+  $linePadding = " " * ($copyrtLength - " $appName".length)
+  Write-Host " $appName$linePadding" -ForegroundColor $appFore -BackgroundColor $appBack
+  
+  Write-Host $emptyLine -ForegroundColor $appFore -BackgroundColor $appBack
+  Write-Host $emptyLine -ForegroundColor $copyFore -BackgroundColor $copyBack
+  Write-Host $copyrt -ForegroundColor $copyFore -BackgroundColor $copyBack
+  
+  $linePadding = " " * ($copyrtLength - " $license".length)
+  Write-Host " Licensed under The MIT License (MIT). $linePadding" -ForegroundColor $copyFore -BackgroundColor $copyBack
+
+  Write-Host $emptyLine -ForegroundColor $copyFore -BackgroundColor $copyBack
+  Write-Host ""
+} # WriteProgramInfo
 
 
 #=[ MAIN ]==========================================================================================
